@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IoT Sensor and Weather Data</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Fetch the data from the backend and display it
+    async function fetchData() {
+      try {
+        const baseUrl = window.location.origin; // Get the dynamic base URL
+        const response = await fetch(`${baseUrl}/sensor-data`); // Use the dynamic base URL
+        const data = await response.json();
+  
+        const tableBody = document.getElementById('sensor-data-body');
+        tableBody.innerHTML = ''; // Clear the current table data
+  
+        data.forEach(item => {
+          const row = document.createElement('tr');
+          row.classList.add('border-b');
+  
+          row.innerHTML = `
+            <td class="px-4 py-2">${new Date(item.timestamp).toLocaleString()}</td>
+            <td class="px-4 py-2">${item.sensorTemperature}°C</td>
+            <td class="px-4 py-2">${item.sensorHumidity}%</td>
+            <td class="px-4 py-2">${item.sensorPressure} hPa</td>
+            <td class="px-4 py-2">${item.weatherTemperature}°C</td>
+            <td class="px-4 py-2">${item.weatherHumidity}%</td>
+            <td class="px-4 py-2">${item.weatherPressure} hPa</td>
+            <td class="px-4 py-2">${item.rain}</td>
+            <td class="px-4 py-2">${item.lightIntensity}</td>
+          `;
+  
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+    // Fetch ESP IP address and display it
+    async function fetchEspIp() {
+      try {
+        const baseUrl = window.location.origin; // Get the dynamic base URL
+        const response = await fetch(`${baseUrl}/esp-ip`);
+        const ipData = await response.json();
+        const ipDisplay = document.getElementById('esp-ip-address');
+        ipDisplay.textContent = `ESP8266 is connected!`;
+      } catch (error) {
+        console.error('Error fetching ESP IP address:', error);
+      }
+    }
+  
+    // Function to trigger download of CSV
+    function downloadCSV() {
+      const baseUrl = window.location.origin; // Get the dynamic base URL
+      window.location.href = `${baseUrl}/download/csv`; // Use the dynamic base URL
+    }
+  
+    // Function to trigger download of Excel
+    function downloadExcel() {
+      const baseUrl = window.location.origin; // Get the dynamic base URL
+      window.location.href = `${baseUrl}/download/excel`; // Use the dynamic base URL
+    }
+  
+    // Fetch data when the page loads
+    window.onload = function() {
+      fetchData();
+      fetchEspIp(); // Fetch and display the ESP IP address
+    };
+  </script>
+  
+  <style>
+    /* Excel-style table header */
+    thead th {
+      position: sticky;
+      top: 0;
+      background-color: #4CAF50;
+      color: white;
+      font-weight: bold;
+    }
+
+    tbody {
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin-top: 1rem;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-container table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    td {
+      background-color: #fff;
+      color: black;
+    }
+
+    th {
+      font-size: 1.1rem;
+    }
+
+    /* Modern Button Styles */
+    .download-buttons {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .download-buttons button {
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .download-buttons button:first-child {
+      background-color: #10B981;
+      color: white;
+    }
+
+    .download-buttons button:first-child:hover {
+      background-color: #059669;
+    }
+
+    .download-buttons button:last-child {
+      background-color: #3B82F6;
+      color: white;
+    }
+
+    .download-buttons button:last-child:hover {
+      background-color: #2563EB;
+    }
+
+    /* Header styles */
+    header {
+      margin-top: 2rem;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #4F46E5;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.125rem;
+      color: #4A4A4A;
+      margin-bottom: 1rem;
+    }
+
+    .warning {
+      color: #F87171;
+      font-weight: 500;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* ESP IP display style */
+    .esp-ip-container {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .esp-ip-container p {
+      font-size: 1rem;
+      color: #3B82F6;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <div class="max-w-6xl mx-auto p-6">
+
+    <!-- Header -->
+    <header>
+      <h1 class="text-4xl font-bold mb-5">IoT Sensor & Weather Data</h1>
+      <p>Developed by: <a href="https://abidhasanrafi.github.io" class="text-blue-500 hover:underline">Md. Abid Hasan Rafi</a></p>
+      <p>Explore sensor and weather data for Dinajpur district, Bangladesh.</p>
+      <p class="warning">N.B. unauthorized copying, use, or distribution of data without authors' concent or citation is strictly prohibited!</p>
+    </header>
+
+    <!-- ESP IP Address -->
+    <div class="esp-ip-container">
+      <p id="esp-ip-address">ESP8266 isn't connected at the moment...</p>
+    </div>
+
+    <!-- Table for displaying data -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Sensor Temperature</th>
+            <th>Sensor Humidity</th>
+            <th>Sensor Pressure</th>
+            <th>Weather Temperature</th>
+            <th>Weather Humidity</th>
+            <th>Weather Pressure</th>
+            <th>Rain</th>
+            <th>Light Intensity</th>
+          </tr>
+        </thead>
+        <tbody id="sensor-data-body">
+          <!-- Data rows will be inserted here -->
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- Fixed Download Buttons -->
+  <div class="download-buttons">
+    <button onclick="downloadCSV()">Download CSV</button>
+    <button onclick="downloadExcel()">Download Excel</button>
+  </div>
+
+</body>
+</html>
