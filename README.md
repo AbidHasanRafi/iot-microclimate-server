@@ -1,4 +1,4 @@
-![Header Image](header-image.png)
+![Header Image](https://raw.githubusercontent.com/AbidHasanRafi/iot-microclimate-server/main/assets/header.png)
 
 # MicroClimate IoT Server
 
